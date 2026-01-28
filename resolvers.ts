@@ -36,6 +36,15 @@ export const resolvers = {
                 deletedAt: new Date()
             });
             return "Da xoa";
+        },
+        updateArticle: async (_, args) => {
+            const { id, article } = args;
+
+            await Article.updateOne({_id: id }, article);
+
+            const record = await Article.findOne({_id: id});
+
+            return record;
         }
     }
 }

@@ -1,5 +1,5 @@
 export const typeDefs = `#graphql
-    type Articles {
+    type Article {
         id: ID,
         title: String,
         avatar: String,
@@ -8,6 +8,7 @@ export const typeDefs = `#graphql
 
     type Query {
         hello: String,
-        getListArticle: [Articles]
+        getListArticle: [Article],
+        getArticle(id: ID): Article
     }
 `;

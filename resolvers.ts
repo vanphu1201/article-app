@@ -1,10 +1,8 @@
 import Article from "./models/article.model";
+import Category from "./models/category.model";
 
 export const resolvers = {
     Query: {
-        hello: () => {
-            return "hello world!";
-        },
         getListArticle: async () => {
             const articles = await Article.find({
                 deleted: false
@@ -18,7 +16,21 @@ export const resolvers = {
                 deleted: false
             });
             return article;
-        }
+        },
+
+
+        getListCategory: async (_, args) => {
+            const categories = await Category.find({deleted: false});
+            return categories;
+        },
+        getCategory: async (_, args) => {
+             const { id } = args;
+            const category = await Category.findOne({
+                _id: id,
+                deleted: false
+            });
+            return category;
+        },
     },
     Mutation: {
         createArticle: async (_, args) => {
@@ -45,6 +57,35 @@ export const resolvers = {
             const record = await Article.findOne({_id: id});
 
             return record;
-        }
+        },
+
+
+
+
+         createCategory: async (_, args) => {
+            const {category} = args;
+            const record = new Category(category);
+            await record.save();
+            return record;
+        },
+        deleteCategory: async (_, args) => {
+            const { id } = args;
+            await Category.updateOne({
+                _id: id
+            }, {
+                deleted: true,
+                deletedAt: new Date()
+            });
+            return "Da xoa";
+        },
+        updateCategory: async (_, args) => {
+            const { id, category } = args;
+
+            await Category.updateOne({_id: id }, category);
+
+            const record = await category.findOne({_id: id});
+
+            return record;
+        },
     }
 }

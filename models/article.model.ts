@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const articleSchema = new mongoose.Schema(
     {
-        titlr: String,
+        title: String,
         avatar: String,
         description: String,
         deleted: {

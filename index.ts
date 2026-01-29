@@ -4,8 +4,8 @@ import express, { Express, Request, Response } from 'express';
 import * as database from './config/database';
 import { ApolloServer } from '@apollo/server';
 import cors from 'cors';
-import { typeDefs } from './typeDefs';
 import { resolvers } from './resolvers';
+import { typeDefs } from './typeDefs/index.typedefs';
 
 const startServer = async () => {
     dotenv.config();
@@ -16,7 +16,7 @@ const port: number | string = process.env.PORT;
 
 // GraphQL
 const apolloServer = new ApolloServer({
-    typeDefs,
+    typeDefs: typeDefs,
     resolvers,
 });
 

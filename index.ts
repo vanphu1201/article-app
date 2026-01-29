@@ -1,11 +1,11 @@
 import { expressMiddleware } from '@as-integrations/express5';
 import dotenv from 'dotenv';
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import * as database from './config/database';
 import { ApolloServer } from '@apollo/server';
 import cors from 'cors';
-import { resolvers } from './resolvers';
 import { typeDefs } from './typeDefs/index.typedefs';
+import { resolvers } from './resolvers/index.resolver';
 
 const startServer = async () => {
     dotenv.config();
@@ -17,7 +17,7 @@ const port: number | string = process.env.PORT;
 // GraphQL
 const apolloServer = new ApolloServer({
     typeDefs: typeDefs,
-    resolvers,
+    resolvers: resolvers
 });
 
 await apolloServer.start();

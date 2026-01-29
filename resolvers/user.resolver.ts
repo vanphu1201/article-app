@@ -1,3 +1,4 @@
+import { Token } from "graphql";
 import { generateRandomString } from "../helpers/generate";
 import User from "../models/user.model";
 import md5 from 'md5';
@@ -32,9 +33,42 @@ export const resolversUser = {
                 fullName: data.fullName,
                 email: data.email,
                 token: data.token,
-                
+
 
             }
         },
+
+        loginUser: async (_, args) => {
+            const { email, password } = args.user;
+            const infoUser = await User.findOne({
+                email: email,
+                deleted: false
+            });
+
+            if (!infoUser) {
+                return {
+                    code: 400,
+                    message: "Email khong ton tai!"
+                }
+            }
+
+            if (infoUser.password != md5(password)) {
+                return {
+                    code: 400,
+                    message: "Mat khau khong chinh xac!"
+                }
+            }
+
+            return {
+                code: 200,
+                message: "Dang nhap thanh cong!",
+                id: infoUser.id,
+                fullName: infoUser.fullName,
+                email: infoUser.email,
+                token: infoUser.token
+
+            }
+
+        }
     }
 }

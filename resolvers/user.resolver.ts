@@ -6,18 +6,18 @@ import md5 from 'md5';
 export const resolversUser = {
 
     Query: {
-        getUser: async (_, args) => {
-            const { id } = args;
+        getUser: async (_, args, context) => {
+            const user = context.user;
 
             const infoUser = await User.findOne({
-                _id: id,
+                token: user.token,
                 deleted: false
             });
 
             if (infoUser) {
                 return {
                     code: 200,
-                    message: "lay thong tin thnah cong!",
+                    message: "lay thong tin thanh cong!",
                     id: infoUser.id,
                     fullName: infoUser.fullName,
                     email: infoUser.email,

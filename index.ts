@@ -6,32 +6,39 @@ import { ApolloServer } from '@apollo/server';
 import cors from 'cors';
 import { typeDefs } from './typeDefs/index.typedefs';
 import { resolvers } from './resolvers/index.resolver';
+import { requireAuth } from './middlewares/auth.middleware';
 
 const startServer = async () => {
     dotenv.config();
-database.connect();
+    database.connect();
 
-const app: Express = express();
-const port: number | string = process.env.PORT;
+    const app: Express = express();
+    const port: number | string = process.env.PORT;
 
-// GraphQL
-const apolloServer = new ApolloServer({
-    typeDefs: typeDefs,
-    resolvers: resolvers
-});
+    // GraphQL
+    app.use('/graphql', requireAuth)
 
-await apolloServer.start();
+    const apolloServer = new ApolloServer({
+        typeDefs: typeDefs,
+        resolvers: resolvers,
+    });
 
-app.use(
-    '/graphql',
-    cors(),
-    express.json(),
-    expressMiddleware(apolloServer)
-);
+    await apolloServer.start();
 
-app.listen(port, () => {
-    console.log(`app listen on port ${port}`);
-});
+    app.use(
+        '/graphql',
+        cors(),
+        express.json(),
+        expressMiddleware(apolloServer, {
+            context: async ({ req }) => {
+                return { ...req };
+            }
+        })
+    );
+
+    app.listen(port, () => {
+        console.log(`app listen on port ${port}`);
+    });
 
 };
 

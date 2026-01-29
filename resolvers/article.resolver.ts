@@ -8,14 +8,24 @@ export const resolversArticle = {
                 deleted: false
             };
 
-            let sort = {}
-            const { sortKey, sortValue } = args;
+            const { sortKey, sortValue, currentPage, limitItems } = args;
 
+            // Sort
+            let sort = {}
             if (sortKey && sortValue) {
                 sort[sortKey] = sortValue;
             }
+            // End sort
 
-            const articles = await Article.find(find).sort(sort);
+            // Pagination
+            const skip = (currentPage - 1) * limitItems;
+            // End pagination
+
+            const articles = await Article
+                .find(find)
+                .sort(sort)
+                .limit(limitItems)
+                .skip(skip);
             return articles;
         },
         getArticle: async (_, args) => {

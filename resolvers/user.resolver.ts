@@ -4,7 +4,7 @@ import md5 from 'md5';
 
 export const resolversUser = {
     Mutation: {
-        RegisterUser: async (_, args) => {
+        registerUser: async (_, args) => {
             const { user } = args;
             
             const existEmail = await User.findOne({
@@ -28,7 +28,12 @@ export const resolversUser = {
             return {
                 code: 200,
                 message: "Dang ky tai khoan thanh cong!",
-                user: data
+                id: data.id,
+                fullName: data.fullName,
+                email: data.email,
+                token: data.token,
+                
+
             }
         },
     }
